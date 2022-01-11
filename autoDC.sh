@@ -226,7 +226,7 @@ if [ "$(id -u)" == "0" ]; then
 	whiptail --title "autoDC - by Adrián Luján Muñoz" --msgbox "Este es un script que automatiza la creacion de un DC.\nIntalacion y configuracion basica para un DC." 8 78
 	whiptail --title "autoDC - by Adrián Luján Muñoz" --msgbox "Si desea cancelar la intalacion en algun momento, le recomendamos encarecidamente que presione Ctrl + C." 8 78
 
-    	if [ $(systemCheck) == 0 ]; then main; fi
+    	systemCheck; if [ $? -eq 0 ]; then main; fi
 else
 	echo -e "${redColour}Ejecute el script como root${endColour}"
 fi
