@@ -26,7 +26,7 @@ function helpPanel(){
 
 function systemCheck(){
     	systemUser=$(hostnamectl | grep 'Operating System:' | xargs | awk '{print $3}')
-	if [ "$systemUser" == "Ubuntu" ]; then echo True; else echo False; fi
+	if [ "$systemUser" == "Ubuntu" ]; then return 0; fi; return 1
 }
 
 function config(){
@@ -226,7 +226,7 @@ if [ "$(id -u)" == "0" ]; then
 	whiptail --title "autoDC - by Adrián Luján Muñoz" --msgbox "Este es un script que automatiza la creacion de un DC.\nIntalacion y configuracion basica para un DC." 8 78
 	whiptail --title "autoDC - by Adrián Luján Muñoz" --msgbox "Si desea cancelar la intalacion en algun momento, le recomendamos encarecidamente que presione Ctrl + C." 8 78
 
-    	if [ "$(systemCheck)" == "True" ]; then main; fi
+    	if [ $(systemCheck) == 0 ]; then main; fi
 else
 	echo -e "${redColour}Ejecute el script como root${endColour}"
 fi
