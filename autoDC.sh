@@ -1,4 +1,4 @@
-ç#!/usr/bin/bash
+#!/usr/bin/bash
 
 # Author: Adrián Luján Muñoz (aka clhore)
 
