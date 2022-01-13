@@ -35,6 +35,7 @@ function config(){
 	local gatewayIp=$(whiptail --inputbox "Introduce la ip gateway (Ej: 192.168.1.1):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	local dns=$(whiptail --inputbox "Introduce los DNS que deseas usar (Ej: 8.8.8.8, 8.8.4.4):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	echo -en "${grayColour}:: Asignando la ip fija $pcIp${endColour}"
+	local domainPC=$(echo $pcName | awk -F '.' '{print $1}')
 	echo -e "
 # This is the network config by 'Adrián Luján Muñoz (aka clhore)'
 network:
@@ -45,6 +46,7 @@ network:
             gateway4: $gatewayIp
             nameservers:
                 addresses: [${dns}]
+                search: [${domainPC}]
   version: 2
 " > /etc/netplan/00-installer-config.yaml
 
@@ -62,7 +64,7 @@ network:
 		echo -e "
 # autoDC by 'Adrián Luján Muñoz (aka clhore)'
 127.0.0.1 localhost
-127.0.1.1 localhost
+127.0.1.1 ${ip}
 ${ip} ${pcName} ${namePc}
 
 # The following lines are desirable for IPv6 capable hosts
