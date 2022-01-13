@@ -137,7 +137,7 @@ function ntpConfig(){
 			if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; return 1; fi
 			
 			echo -en "${grayColour}:: Introduciendo $ntpServer en /etc/ntp.conf${endColour}"
-			mv /etc/ntp.conf /etc/ntp.conf.save; echo "server $ntpServer" > /etc/ntp.conf 2>/dev/null
+			mv /etc/ntp.conf /etc/ntp.conf.save; echo "server $ntpServer" >> /etc/ntp.conf 2>/dev/null
 
 			if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; mv /etc/ntp.conf.save /etc/ntp.conf; return 1; fi
 			
