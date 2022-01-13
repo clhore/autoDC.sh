@@ -129,10 +129,23 @@ function ntpConfig(){
 				if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; return 1; fi
 			else echo -e " ${redColour}error${endColour}"; return 1; fi
 			
-			echo -en "${grayColour}:: Instalando paquete ntp${endColour}"
-			apt update -y &>/dev/null; apt install ntp -y &>/dev/null
+			echo -en "${grayColour}:: Instalando paquete ntp ntpdate${endColour}"
+			apt update -y &>/dev/null; apt install ntp ntpdate -y &>/dev/null
 			
 			if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; return 1; fi
+			
+			echo -en "${grayColour}:: Introduciendo $ntpServer en /etc/ntp.conf${endColour}"
+			mv /etc/ntp.conf /etc/ntp.conf.save; echo "server $ntpServer" > /etc/ntp.conf 2>/dev/null
+
+			if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; mv /etc/ntp.conf.save /etc/ntp.conf; return 1; fi
+			
+			echo -en "${grayColour}:: Sincronizando el equipo al servidor ntp${endColour}"
+			systemctl stop ntp &>/dev/null; ntpdate -B $ntpServer
+			
+			if [ $? -eq 1 ]; then 
+				 apt remove --purge ntpdate -y &>/dev/null; apt install ntpdate -y &>/dev/null
+				 ntpdate -B $ntpServer
+			fi; systemctl start ntp &>/dev/null; if [ $? -eq 1 ]; then echo -e " ${redColour}error${endColour}"; return 1; fi echo -e " ${greenColour}listo${endColour}"
 		fi
 	fi
 }
