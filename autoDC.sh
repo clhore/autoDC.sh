@@ -96,7 +96,7 @@ function checkInternet(){
 }
 
 function dependencies(){
-    	local dependencies=(ufw samba winbind smbclient attr acl); local errorCode=()
+    	local dependencies=(ufw samba winbind smbclient attr acl ntp); local errorCode=()
 
 	echo -en "${grayColour}:: Actualizando el sistema${endColour}"; sleep 1
 
