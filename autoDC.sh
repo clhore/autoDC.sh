@@ -36,7 +36,7 @@ function config(){
 	local dns=$(whiptail --inputbox "Introduce los DNS que deseas usar (Ej: 8.8.8.8, 8.8.4.4):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	echo -en "${grayColour}:: Asignando la ip fija $pcIp${endColour}"
 	local domainPC=$(echo $pcName | awk -F '.' '{print $2.$3}')
-	echo -e "
+	mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.save; echo -e "
 # This is the network config by 'Adrián Luján Muñoz (aka clhore)'
 network:
   ethernets:
@@ -61,7 +61,7 @@ network:
 		local namePc=$(echo $pcName | awk -F '.' '{print $1}')
 		hostnamectl set-hostname $namePc &>/dev/null; sleep 1
 		local ip=$(echo $pcIp | sed 's/\(.*\)\//\1 /' | awk '{print $1}')
-		echo -e "
+		mv /etc/hosts /etc/hosts.save; echo -e "
 # autoDC by 'Adrián Luján Muñoz (aka clhore)'
 127.0.0.1 localhost
 127.0.1.1 ${ip}
@@ -88,7 +88,7 @@ function checkInternet(){
 	echo -en "${grayColour}:: Comprovando la conexion a internet${endColour}"
 
 	for i in "${list[@]}"; do
-		ping -c 1 $i &>/dev/null
+		curl -s -o /dev/null https://$i
 		if [ $? -eq 0 ]; then let codeCheck+=1; fi
 	done
 
