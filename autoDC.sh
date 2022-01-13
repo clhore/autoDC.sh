@@ -74,8 +74,7 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 " > /etc/hosts
-		echo -e " ${greenColour}listo${endColour}"
-		echo -e "${ip} ${pcName}" > .tmp 2>/dev/null
+		echo -e " ${greenColour}listo${endColour}"; echo -e "${ip} ${pcName}" > .tmp 2>/dev/null
 	else
 		echo -e " ${redColour}Error${endColour}"
 		ctrl_c
@@ -95,8 +94,51 @@ function checkInternet(){
 	sleep 0.5; echo " ${codeCheck}/4"; sleep 1
 }
 
+function ntpConfig(){
+	whiptail --title "autoDC - by Adrián Luján Muñoz" --yesno "Desea configurar un servidor ntp" 8 40
+
+	if [ $? -eq 0  ]; then
+		timeZone=$(
+        		whiptail --title "dcControl - by Adrián Luján Muñoz" --menu "Seleccione su zona horaria:" 16 40 8 \
+                		"1)" "Europe/Madrid" \
+                		"2)" "Europe/London" \
+                		"3)" "America/Indiana/Winamac" \
+                		"4)" "America/Puerto_Rico" \
+                		"5)" "America/Tijuana" \
+                		"6)" "America/Panama" \
+                		"7)" "America/Rosario" \
+                		"8)" "America/Mexico_City" 3>&2 2>&1 1>&3
+		)
+
+		if [ "$timeZone" != "" ]; then
+        		case $timeZone in
+                		"1)") declare -r timeZone="Europe/Madrid";; "2)") declare -r timeZone="Europe/London";;
+                		"3)") declare -r timeZone="America/Indiana/Winamac";; "4)") declare -r timeZone="America/Puerto_Rico";;
+                		"5)") declare -r timeZone="America/Tijuana";; "6)") declare -r timeZone="America/Panama";;
+                		"7)") declare -r timeZone="America/Rosario";; "8)") declare -r timeZone="America/Mexico_City";;
+        		esac
+		else return 0; fi
+		
+		local ntpServer=$(whiptail --inputbox "Introduce el servidor ntp o introduzac defauld par no realizar cambios (Ej: hora.rediris.es):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
+		if [[ "${ntpServer}" != "defauld" && "${ntpServer}" != "" ]]; then
+			echo -en "${grayColour}:: Asignando el zona horaria $timeZone${endColour}"
+			timedatectl set-timezone $timeZone &>/dev/null
+			
+			if [ $? -eq 0 ]; then  
+				timedatectl set-ntp no &>/dev/null
+				if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; return 1; fi
+			else echo -e " ${redColour}error${endColour}"; return 1; fi
+			
+			echo -en "${grayColour}:: Instalando paquete ntp${endColour}"
+			apt update -y &>/dev/null; apt install ntp -y &>/dev/null
+			
+			if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; return 1; fi
+		fi
+	fi
+}
+
 function dependencies(){
-    	local dependencies=(ufw samba winbind smbclient attr acl ntp); local errorCode=()
+    	local dependencies=(ufw samba winbind smbclient attr acl); local errorCode=()
 
 	echo -en "${grayColour}:: Actualizando el sistema${endColour}"; sleep 1
 
@@ -152,7 +194,7 @@ function checkSamba(){
 }
 
 function toDC(){
-	sleep 1; dependencies
+	sleep 1; ntpConfig; dependencies
 	echo -e "${grayColour}:: Iniciando la configuracion de samba${endColour}"
 	sleep 1; sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.old &>/dev/null; sudo samba-tool domain provision --use-rfc2307 --interactive; sleep 1; sudo cp /var/lib/samba/private/krb5.conf /etc &>/dev/null; clear
 	echo -en "${grayColour}:: Configuracion de samba${endColour}"; sleep 0.5; echo -e " ${greenColour}listo${endColour}";
