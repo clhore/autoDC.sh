@@ -35,7 +35,7 @@ function config(){
 	local gatewayIp=$(whiptail --inputbox "Introduce la ip gateway (Ej: 192.168.1.1):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	local dns=$(whiptail --inputbox "Introduce los DNS que deseas usar (Ej: 8.8.8.8, 8.8.4.4):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	echo -en "${grayColour}:: Asignando la ip fija $pcIp${endColour}"
-	local domainPC=$(echo $pcName | awk -F '.' '{print $1}')
+	local domainPC=$(echo $pcName | awk -F '.' '{print $2.$3}')
 	echo -e "
 # This is the network config by 'Adrián Luján Muñoz (aka clhore)'
 network:
