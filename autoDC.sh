@@ -89,7 +89,7 @@ function checkInternet(){
 	echo -en "${grayColour}:: Comprovando la conexion a internet${endColour}"
 
 	for i in "${list[@]}"; do
-		ping -c /dev/null https://$i
+		ping -c 1 $i &>/dev/null
 		if [ $? -eq 0 ]; then let codeCheck+=1; fi
 	done
 
