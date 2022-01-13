@@ -35,7 +35,9 @@ function config(){
 	local gatewayIp=$(whiptail --inputbox "Introduce la ip gateway (Ej: 192.168.1.1):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	local dns=$(whiptail --inputbox "Introduce los DNS que deseas usar (Ej: 8.8.8.8, 8.8.4.4):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	echo -en "${grayColour}:: Asignando la ip fija $pcIp${endColour}"
-	local domainPC=$(echo $pcName | awk -F '.' '{print $2.$3}')
+	local domainPC1=$(echo $pcName | awk -F '.' '{print $2}')
+	local domainPC2=$(echo $pcName | awk -F '.' '{print $3}')
+	local domainPC=$(echo "${domainPC1}.${domainPC1}")
 	mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.save; echo -e "
 # This is the network config by 'Adrián Luján Muñoz (aka clhore)'
 network:
@@ -145,7 +147,7 @@ function ntpConfig(){
 			if [ $? -eq 1 ]; then 
 				 apt remove --purge ntpdate -y &>/dev/null; apt install ntpdate -y &>/dev/null
 				 ntpdate -B $ntpServer
-			fi; systemctl start ntp &>/dev/null; if [ $? -eq 1 ]; then echo -e " ${redColour}error${endColour}"; return 1; fi echo -e " ${greenColour}listo${endColour}"
+			fi; systemctl start ntp &>/dev/null; if [ $? -eq 1 ]; then echo -e " ${redColour}error${endColour}"; return 1; fi; echo -e " ${greenColour}listo${endColour}"
 		fi
 	fi
 }
