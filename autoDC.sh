@@ -282,6 +282,7 @@ function toDC(){
                 	systemctl stop systemd-resolved &>/dev/null; systemctl disable systemd-resolved &>/dev/null
 			local pid=$(sudo ps -aux | grep samba | grep Ss | xargs | awk '{print $2}'); kill $pid &>/dev/null; sleep 1; samba
                 	echo -e " ${greenColour}listo${endColour}"; echo 'restart' >/.tmp2 2>/dev/null
+			echo -e "${redColour}Una vez se reinicie el equipo ejecute de nuevo el script${endColour}"; sleep 2;
 			echo -e "${grayColour}:: El equipo se${endColour} ${redColour}reiniciara en 4s${endColour}"; sleep 4; reboot
 		fi
 	else
