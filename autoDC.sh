@@ -159,7 +159,7 @@ function ntpConfig(){
 }
 
 function dependencies(){
-    	sleep 2;local dependencies=(ufw samba winbind smbclient attr acl); local errorCode=()
+    	sleep 2; local dependencies=(ufw samba winbind smbclient attr acl); local errorCode=()
 
 	echo -en "${grayColour}:: Actualizando el sistema${endColour}"; sleep 1
 
@@ -276,13 +276,13 @@ function toDC(){
 	echo -en "${grayColour}:: Instalando krb5-user${endColour}"; sleep 0.5
 	apt install krb5-user -y &>/dev/null; echo -e " ${greenColour}listo${endColour}"; sleep 1; clear
 
-	echo -en "${grayColour}:: Prueba 2 kerkeros $domain${endColour}"; sleep 0.5
+	echo -e "${grayColour}:: Prueba 2 kerkeros $domain${endColour}"; sleep 0.5
 	kinit Administrator@${domain^^}
 
-	if [ $? -eq 0 ]; then sleep 0.5; echo -e " ${greenColour}listo${endColour}"; sleep 0.5; else echo -e " ${redColour}error${endColour}"; fi
+	if [ $? -eq 0 ]; then sleep 1; clear; else echo -e " ${redColour}error${endColour}"; fi
 
 	echo -en "${grayColour}:: Prueba 3 kerkeros $domain${endColour}"; sleep 0.5
-	klist
+	klist | grep "Administrator@${domain^^}" &>/dev/null
 
 	if [ $? -eq 0 ]; then sleep 0.5; echo -e " ${greenColour}listo${endColour}"; sleep 0.5; else echo -e " ${redColour}error${endColour}"; fi
 
