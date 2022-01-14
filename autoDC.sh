@@ -80,7 +80,7 @@ ff02::2 ip6-allrouters
 		echo -e " ${greenColour}listo${endColour}"; echo -e "${ip} ${pcName}" > .tmp 2>/dev/null
 	else
 		echo -e " ${redColour}Error${endColour}"
-		ctrl_c
+		mv /etc/netplan/00-installer-config.yaml.save /etc/netplan/00-installer-config.yaml; ctrl_c
 	fi
 }
 
