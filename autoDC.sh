@@ -153,7 +153,9 @@ function ntpConfig(){
 			if [ $? -eq 1 ]; then
 				 apt remove --purge ntpdate -y &>/dev/null; apt install ntpdate -y &>/dev/null
 				 ntpdate -B $ntpServer &>/dev/null
-			fi; systemctl start ntp &>/dev/null; if [ $? -eq 1 ]; then echo -e " ${redColour}error${endColour}"; return 1; fi; echo -e " ${greenColour}listo${endColour}"
+			fi; systemctl start ntp &>/dev/null
+			
+			if [ $? -eq 1 ]; then echo -e " ${redColour}error${endColour}"; return 1; fi; echo -e " ${greenColour}listo${endColour}"
 		fi
 	fi
 }
