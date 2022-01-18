@@ -130,7 +130,7 @@ function ntpConfig(){
         		esac
 		else return 0; fi
 
-		local ntpServer=$(whiptail --inputbox "Introduce el servidor ntp o introduzac defauld par no realizar cambios (Ej: hora.rediris.es):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
+		local ntpServer=$(whiptail --inputbox "Introduce el servidor ntp o introduzac defauld par no realizar cambios (Ej: ntp1.software.imdea.org):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 		if [[ "${ntpServer}" != "defauld" && "${ntpServer}" != "" ]]; then
 			echo -en "${grayColour}:: Asignando zona horaria $timeZone${endColour}"
 			timedatectl set-timezone "${timeZone}" &>/dev/null; timedatectl set-timezone "${timeZone}" &>/dev/null
@@ -143,7 +143,7 @@ function ntpConfig(){
 			if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; return 1; fi
 
 			echo -en "${grayColour}:: Introduciendo $ntpServer en /etc/ntp.conf${endColour}"
-			cp /etc/ntp.conf /etc/ntp.conf.save; sleep 0.5; echo -e "server ${ntpServer}" >> /etc/ntp.conf 2>/dev/null
+			cp /etc/ntp.conf /etc/ntp.conf.save; sleep 0.5; echo -e "server ${ntpServer} prefer" >> /etc/ntp.conf 2>/dev/null
 
 			if [ $? -eq 0 ]; then echo -e " ${greenColour}listo${endColour}"; else echo -e " ${redColour}error${endColour}"; mv /etc/ntp.conf.save /etc/ntp.conf; return 1; fi
 
