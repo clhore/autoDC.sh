@@ -30,7 +30,7 @@ function systemCheck(){
 }
 
 function config(){
-	local pcName=$(whiptail --inputbox "Introduce el nuebo nombre del equipo (Ej: nodo.ej.local):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
+	local pcName=$(whiptail --inputbox "Introduce el nuevo nombre del equipo (Ej: nodo.ej.local):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	local pcIp=$(whiptail --inputbox "Introduce la ip fija ha asiganr a su servidor (Ej: 192.168.1.111/24):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	local gatewayIp=$(whiptail --inputbox "Introduce la ip gateway (Ej: 192.168.1.1):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
 	local dns=$(whiptail --inputbox "Introduce los DNS que deseas usar (Ej: 8.8.8.8, 8.8.4.4):" 8 78 --title "autoDC - by Adrián Luján Muñoz" 3>&1 1>&2 2>&3)
